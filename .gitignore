@@ -1,4 +1,4 @@
-protocol.session.sql
+Protocol.session.sql
 *.lock
 *.json
 .vscode/*.*
