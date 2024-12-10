@@ -100,7 +100,7 @@ Use the script in the link bellow:
 
 [script php using composer fake data](https://file.io/dP0CZFoNRxRi)
 
-### Ensure Faker is installed via Composer:
+#### Ensure Faker is installed via Composer:
 ```bash
 composer require fakerphp/faker
 ```
