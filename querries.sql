@@ -1,7 +1,6 @@
 -- name: ousama
 -- email: oujaberousama@gmail.com
 
-
 -- create dB
 CREATE DATABASE test_movies;
 
@@ -36,7 +35,7 @@ CREATE TABLE movie(
     Rating VARCHAR(10) NOT NULL
 );
 
--- create 4th table whatchistory
+-- create 4th table watchhistory
 CREATE TABLE whatchistory(
 	WhatchHistoryID INT AUTO_INCREMENT PRIMARY KEY,
     UserID INT NOT NULL,
@@ -67,3 +66,70 @@ MODIFY COLUMN SubscriptionID INT NULL;
 INSERT INTO movie(`Title`, `Genre`, `ReleaseYear`, `Duration`, `Rating`)
 VALUES ('Data Science Adventures', 'Documentary', 2000, 45, 'R')
 
+-- filter data COMMENT
+SELECT Title, Releaseyear from movie where `Genre` = 'comedy' AND `ReleaseYear` > 2020;
+
+-- update type of subscriptionID
+UPDATE users
+SET SubscriptionID = (
+    SELECT SubscriptionID
+    FROM subscription
+    WHERE lower(SubscriptionType) = 'premium' LIMIT 1
+)
+WHERE SubscriptionID = (
+    SELECT SubscriptionID
+    FROM subscription
+    WHERE lower(SubscriptionType) = 'basic' LIMIT 1
+);
+
+-- display all user and sybscription
+SELECT tab1.FirstName, tab2.SubscriptionType
+FROM users tab1
+JOIN subscription tab2
+ON tab1.`SubscriptionID` = tab2.`SubscriptionID`;
+
+-- display all users who finish watching a movie
+SELECT tab1.FirstName, tab2.CompletionPercentage
+FROM users tab1
+JOIN whatchistory tab2
+ON tab1.`UserID` = tab2.`UserID`
+WHERE CompletionPercentage = 100;
+
+-- display 5 long movie by Title
+select `Title` FROM movie
+ORDER BY `Duration` DESC LIMIT 5
+
+-- average of watching movie
+SELECT AVG(`CompletionPercentage`)
+FROM whatchistory
+
+-- group users by Plans
+SELECT tab2.Subscriptiontype AS Plan, COUNT(tab1.UserID) AS Total
+FROM users tab1
+INNER JOIN subscription tab2 ON tab1.SubscriptionID = tab2.SubscriptionID
+GROUP BY tab2.SubscriptionType
+ORDER BY COUNT(tab1.UserID);
+
+-- extract average movie rating
+SELECT Title
+FROM movie
+WHERE MovieID IN (
+    SELECT MovieID
+    FROM review
+    GROUP BY MovieID
+    HAVING AVG(Rating) > 2
+);
+
+-- find pairs of films
+SELECT
+    m1.Title AS Movie1,
+    m2.Title AS Movie2,
+
+    m1.Genre,
+    m1.ReleaseYear
+
+FROM movie m1
+JOIN movie m2
+    ON m1.Genre = m2.Genre
+    AND m1.ReleaseYear = m2.ReleaseYear
+    AND m1.MovieID < m2.MovieID;

@@ -1,53 +1,37 @@
-# Movie Subscription System Database
+# Test Movies Database Project
 
-This document provides a detailed schema for a database system designed to manage movie subscriptions, users, watch history, and reviews. It includes the SQL queries to create the necessary database and tables and filter data of tables, It educational project from youcode.
+This project is an educational exercise designed for YouCode School. It provides hands-on experience with SQL by creating and interacting with a database for managing movies, users, subscriptions, watch histories, and reviews. The project is intended for beginners to practice SQL concepts like creating tables, defining relationships, inserting data, and performing queries.
 
-## Database Information
+## Author Information
+- **Name**: Ousama
+- **Email**: [oujaberousama@gmail.com](mailto:oujaberousama@gmail.com)
 
-- **Database Name**: `test_movies`
-- **Author**: Protocol
-- **Email**: oujaberousama@gmail.com
+---
 
-## Database Creation
+## Database Setup
 
-### 1. Create the Database
-
+### 1. Create Database
 ```sql
 CREATE DATABASE test_movies;
-```
-
-### 2. Use the Database
-
-```sql
 USE test_movies;
 ```
 
-## Tables
+---
 
-### 1. `subscription` Table
+## Table Definitions
 
-This table stores information about different subscription types available to users.
-
+### 2. Subscription Table
+This table stores subscription types and their monthly fees.
 ```sql
 CREATE TABLE subscription (
     SubscriptionID INT AUTO_INCREMENT PRIMARY KEY,
-    SubscriptionType VARCHAR(50),
-    MonthlyFee DECIMAL(10,2) NOT NULL,
-        CHECK
-            (LOWER(subscriptionType) = 'basic'
-        OR
-            LOWER(subscriptionType) = 'premium')
+    SubscriptionType VARCHAR(50) CHECK (LOWER(SubscriptionType) = 'basic' OR LOWER(SubscriptionType) = 'premium'),
+    MonthlyFee DECIMAL(10,2) NOT NULL
 );
 ```
 
-- `SubscriptionID`: Unique identifier for each subscription type.
-- `SubscriptionType`: Type of subscription, either 'basic' or 'premium'.
-- `MonthlyFee`: Monthly fee for the subscription type.
-
-### 2. `users` Table
-
-This table stores user details.
-
+### 3. Users Table
+This table holds user information and links each user to a subscription.
 ```sql
 CREATE TABLE users (
     UserID INT AUTO_INCREMENT PRIMARY KEY,
@@ -60,62 +44,35 @@ CREATE TABLE users (
 );
 ```
 
-- `UserID`: Unique identifier for each user.
-- `FirstName`: User's first name.
-- `LastName`: User's last name.
-- `Email`: User's email address unique.
-- `RegistrationDate`: Date when the user registered.
-- `SubscriptionID`: Foreign key referencing the subscription the user is on.
-
-### 3. `movie` Table
-
-This table stores information about the movies available in the system.
-
+### 4. Movie Table
+This table contains information about movies.
 ```sql
 CREATE TABLE movie (
     MovieID INT AUTO_INCREMENT PRIMARY KEY,
     Title VARCHAR(100) NOT NULL,
     Genre VARCHAR(100) NOT NULL,
-    ReleaseYear INT NOT NULL,
+    ReleaseYear INT NOT NULL CHECK (ReleaseYear >= 1000 AND ReleaseYear <= 3000),
     Duration INT NOT NULL,
-    Rating VARCHAR(10) NOT NULL,
-        CHECK (ReleaseYear >= 1000 AND ReleaseYear <= 3000),
+    Rating VARCHAR(10) NOT NULL
 );
 ```
 
-- `MovieID`: Unique identifier for each movie.
-- `Title`: The title of the movie.
-- `Genre`: Genre of the movie (e.g., Action, Drama, Comedy).
-- `ReleaseYear`: The year the movie was released.
-- `Duration`: Duration of the movie in minutes.
-- `Rating`: The rating of the movie (e.g., PG, R).
-
-### 4. `whatchistory` Table
-
-This table tracks the watch history of each user.
-
+### 5. Watch History Table
+This table tracks which users have watched which movies and their completion percentages.
 ```sql
-CREATE TABLE whatchistory (
-    WhatchHistoryID INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE watchhistory (
+    WatchHistoryID INT AUTO_INCREMENT PRIMARY KEY,
     UserID INT NOT NULL,
     FOREIGN KEY (UserID) REFERENCES users(UserID),
     MovieID INT NOT NULL,
     FOREIGN KEY (MovieID) REFERENCES movie(MovieID),
-    WhatchDate DATE NOT NULL,
+    WatchDate DATE NOT NULL,
     CompletionPercentage INT NOT NULL DEFAULT 0
 );
 ```
 
-- `WhatchHistoryID`: Unique identifier for each watch history entry.
-- `UserID`: Foreign key referencing the user who watched the movie.
-- `MovieID`: Foreign key referencing the movie that was watched.
-- `WhatchDate`: Date the movie was watched.
-- `CompletionPercentage`: Percentage of the movie watched.
-
-### 5. `review` Table
-
-This table stores reviews submitted by users for movies.
-
+### 6. Review Table
+This table stores user reviews and ratings for movies.
 ```sql
 CREATE TABLE review (
     ReviewID INT AUTO_INCREMENT PRIMARY KEY,
@@ -129,25 +86,13 @@ CREATE TABLE review (
 );
 ```
 
-- `ReviewID`: Unique identifier for each review.
-- `UserID`: Foreign key referencing the user who submitted the review.
-- `MovieID`: Foreign key referencing the movie being reviewed.
-- `Rating`: Rating given to the movie (e.g., 1 to 5).
-- `ReviewText`: The textual review (optional).
-- `ReviewDate`: Date the review was submitted.
-
-## Database Updates
-
-### 1. Modify the `SubscriptionID` Column in `users` Table
-
-This command modifies the `SubscriptionID` column in the `users` table to allow `NULL` values.
-
+### Update column Sub_ID from NOT NULL to NULL to allow NULL values
 ```sql
 ALTER TABLE users
 MODIFY COLUMN SubscriptionID INT NULL;
 ```
 
-This change allows a user to have no subscription, meaning they are not assigned to free plan subscription.
+---
 
 ## Fill the database
 
@@ -155,6 +100,106 @@ Use the script in the link bellow:
 
 [script php using composer fake data](https://file.io/dP0CZFoNRxRi)
 
-## Filter data tables
+---
 
+## Sample Operations
 
+### 1. Insert Movie
+```sql
+INSERT INTO movie (Title, Genre, ReleaseYear, Duration, Rating)
+VALUES ('Data Science Adventures', 'Documentary', 2000, 45, 'R');
+```
+
+### 2. Filter Data
+```sql
+SELECT Title, ReleaseYear 
+FROM movie 
+WHERE Genre = 'comedy' AND ReleaseYear > 2020;
+```
+
+### 3. Update Subscription Type
+```sql
+UPDATE users
+SET SubscriptionID = (
+    SELECT SubscriptionID
+    FROM subscription
+    WHERE LOWER(SubscriptionType) = 'premium' LIMIT 1
+)
+WHERE SubscriptionID = (
+    SELECT SubscriptionID
+    FROM subscription
+    WHERE LOWER(SubscriptionType) = 'basic' LIMIT 1
+);
+```
+
+### 4. Display All Users and Subscriptions
+```sql
+SELECT tab1.FirstName, tab2.SubscriptionType
+FROM users tab1
+JOIN subscription tab2
+ON tab1.SubscriptionID = tab2.SubscriptionID;
+```
+
+### 5. Display Users Who Finished Watching a Movie
+```sql
+SELECT tab1.FirstName, tab2.CompletionPercentage
+FROM users tab1
+JOIN watchhistory tab2
+ON tab1.UserID = tab2.UserID
+WHERE CompletionPercentage = 100;
+```
+
+### 6. Top 5 Long Movies
+```sql
+SELECT Title 
+FROM movie
+ORDER BY Duration DESC
+LIMIT 5;
+```
+
+### 7. Average Completion Percentage
+```sql
+SELECT AVG(CompletionPercentage) 
+FROM watchhistory;
+```
+
+### 8. Group Users by Subscription Plans
+```sql
+SELECT tab2.SubscriptionType AS Plan, COUNT(tab1.UserID) AS Total
+FROM users tab1
+INNER JOIN subscription tab2 ON tab1.SubscriptionID = tab2.SubscriptionID
+GROUP BY tab2.SubscriptionType
+ORDER BY COUNT(tab1.UserID);
+```
+
+### 9. Extract Average Movie Rating
+```sql
+SELECT Title
+FROM movie
+WHERE MovieID IN (
+    SELECT MovieID
+    FROM review
+    GROUP BY MovieID
+    HAVING AVG(Rating) > 2
+);
+```
+
+### 10. Find Pairs of Similar Movies
+```sql
+SELECT
+    m1.Title AS Movie1,
+    m2.Title AS Movie2,
+    m1.Genre,
+    m1.ReleaseYear
+FROM movie m1
+JOIN movie m2
+    ON m1.Genre = m2.Genre
+    AND m1.ReleaseYear = m2.ReleaseYear
+    AND m1.MovieID < m2.MovieID;
+```
+
+---
+
+## Notes
+- This project was created as a learning experience for SQL and database design.
+- Feedback and suggestions are welcome!
