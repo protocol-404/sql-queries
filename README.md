@@ -3,8 +3,8 @@
 This project is an educational exercise designed for YouCode School. It provides hands-on experience with SQL by creating and interacting with a database for managing movies, users, subscriptions, watch histories, and reviews. The project is intended for beginners to practice SQL concepts like creating tables, defining relationships, inserting data, and performing queries.
 
 ## Author Information
-- **Name**: Ousama
-- **Email**: [oujaberousama@gmail.com](mailto:oujaberousama@gmail.com)
+- **Name**: Protocol
+- **Email**: [click here](mailto:oujaberousama@gmail.com)
 
 ---
 
