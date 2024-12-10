@@ -1,0 +1,5 @@
+protocol.session.sql
+*.lock
+*.json
+.vscode/*.*
+vendor/*/*/*
