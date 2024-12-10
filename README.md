@@ -153,6 +153,8 @@ This change allows a user to have no subscription, meaning they are not assigned
 
 Use the script in the link bellow:
 
-[script php using composer fake data](https://google.com)
+[script php using composer fake data](https://file.io/dP0CZFoNRxRi)
 
 ## Filter data tables
+
+
