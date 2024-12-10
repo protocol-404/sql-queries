@@ -98,7 +98,7 @@ MODIFY COLUMN SubscriptionID INT NULL;
 
 Use the script in the link bellow:
 
-[script php using composer fake data](https://file.io/dP0CZFoNRxRi)
+[script php using composer fake data](https://github.com/protocol-404/sql-queries/blob/main/php_data.php)
 
 #### Ensure Faker is installed via Composer:
 ```bash
