@@ -2,4 +2,4 @@ Protocol.session.sql
 *.lock
 *.json
 .vscode/*.*
-vendor/*/*/*
+./vendor/
