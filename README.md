@@ -105,7 +105,7 @@ Use the script in the link bellow:
 composer require fakerphp/faker
 ```
 
-- After that run your script by: `php script.php`
+- After that run your script by: `php php_data.php`
 ---
 
 ## Sample Operations
