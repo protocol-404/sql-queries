@@ -165,8 +165,12 @@ LIMIT 5;
 
 ### 7. Average Completion Percentage
 ```sql
-SELECT AVG(CompletionPercentage) 
-FROM watchhistory;
+SELECT whatchistory.MovieID,
+        movie.title,
+        CONCAT(FLOOR(AVG(CompletionPercentage)),'%') as Complete
+FROM whatchistory 
+join movie on movie.MovieID = whatchistory.MovieID
+GROUP BY whatchistory.MovieID;
 ```
 
 ### 8. Group Users by Subscription Plans

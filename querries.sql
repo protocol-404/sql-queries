@@ -100,8 +100,13 @@ select `Title` FROM movie
 ORDER BY `Duration` DESC LIMIT 5
 
 -- average of watching movie
-SELECT AVG(`CompletionPercentage`)
-FROM whatchistory
+SELECT whatchistory.MovieID,
+        movie.title,
+        CONCAT(FLOOR(AVG(CompletionPercentage)),'%') as Complete
+FROM whatchistory 
+JOIN movie
+ON movie.MovieID = whatchistory.MovieID
+GROUP BY whatchistory.MovieID;
 
 -- group users by Plans
 SELECT tab2.Subscriptiontype AS Plan, COUNT(tab1.UserID) AS Total
